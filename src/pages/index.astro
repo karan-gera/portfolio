@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { TimelineWrapper } from '../components/timeline/TimelineWrapper';
 
 // Load and sort entries by start date (descending - most recent first)
 const allEntries = await getCollection('entries', ({ data }) => {
@@ -73,27 +74,12 @@ console.log(`📄 Index page loaded ${entriesData.length} entries`);
         </p>
       </div>
 
-      <!-- Timeline Component Mount Point -->
-      <div id="timeline-root" 
-           class="min-h-[400px] relative"
-           data-entries={JSON.stringify(entriesData)}>
-        <!-- Loading/Fallback state -->
-        <div class="terminal-border rounded-lg p-8 text-center" id="timeline-fallback">
-          <div class="animate-pulse">
-            <div class="font-mono text-sm text-gray-400 mb-4">
-              <span class="text-tui-green">$</span> loading interactive timeline...
-            </div>
-            <div class="space-y-4">
-              {entriesData.slice(0, 2).map((entry) => (
-                <div key={entry.slug} class="border-l-2 border-gray-600 pl-4 text-left">
-                  <div class="h-4 bg-gray-700 rounded mb-2 w-3/4"></div>
-                  <div class="h-3 bg-gray-800 rounded mb-1 w-1/2"></div>
-                  <div class="h-3 bg-gray-800 rounded w-full"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <!-- Timeline Component -->
+      <div class="w-full">
+        <TimelineWrapper 
+          entries={entriesData} 
+          client:load 
+        />
       </div>
 
       <!-- Stats Summary -->
@@ -147,65 +133,6 @@ console.log(`📄 Index page loaded ${entriesData.length} entries`);
     </section>
   </div>
 
-  <!-- React Timeline Component Hydration -->
-  <script>
-    import { Timeline } from '../components/timeline/Timeline';
-    import React from 'react';
-    import { createRoot } from 'react-dom/client';
-
-    // Timeline App component
-    function TimelineApp({ entries }) {
-      const handleEntrySelect = (entry) => {
-        // Navigate to entry detail page
-        window.location.href = `/entry/${entry.slug}`;
-      };
-
-      return React.createElement(Timeline, {
-        entries,
-        onEntrySelect: handleEntrySelect,
-        className: 'w-full'
-      });
-    }
-
-    // Client-side hydration
-    document.addEventListener('DOMContentLoaded', () => {
-      const timelineRoot = document.getElementById('timeline-root');
-      const fallback = document.getElementById('timeline-fallback');
-      
-      if (timelineRoot) {
-        try {
-          // Parse entries data from the DOM
-          const entriesData = JSON.parse(timelineRoot.dataset.entries || '[]');
-          
-          // Create React root and render Timeline
-          const root = createRoot(timelineRoot);
-          root.render(React.createElement(TimelineApp, { entries: entriesData }));
-          
-          // Hide fallback loading state
-          if (fallback) {
-            fallback.style.display = 'none';
-          }
-          
-          console.log('✅ Timeline component mounted with', entriesData.length, 'entries');
-        } catch (error) {
-          console.error('❌ Failed to mount Timeline component:', error);
-          
-          // Show error state
-          if (fallback) {
-            fallback.innerHTML = `
-              <div class="terminal-border rounded-lg p-8 text-center bg-red-900/20 border-red-500/30">
-                <div class="font-mono text-sm text-red-400 mb-2">
-                  <span class="text-red-500">✗</span> Timeline component failed to load
-                </div>
-                <p class="text-xs text-red-300">Check console for details</p>
-              </div>
-            `;
-          }
-        }
-      }
-    });
-  </script>
-  
   <!-- Global data for debugging -->
   <script define:vars={{ entriesData }}>
     // Make entries data available globally for debugging

@@ -1,6 +1,7 @@
 // Timeline component exports
 export { Timeline } from './Timeline';
 export { EntryCard } from './EntryCard';
+export { TimelineWrapper } from './TimelineWrapper';
 export type { 
   TimelineProps, 
   TimelineEntry, 
