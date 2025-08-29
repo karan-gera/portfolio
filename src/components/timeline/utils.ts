@@ -88,3 +88,133 @@ export function debounce<T extends (...args: any[]) => any>(
     timeout = setTimeout(() => func(...args), wait);
   };
 }
+
+/**
+ * URL parameter management for modal deep linking
+ */
+export function getEntrySlugFromURL(): string | null {
+  if (typeof window === 'undefined') return null;
+  const params = new URLSearchParams(window.location.search);
+  return params.get('e');
+}
+
+export function setEntrySlugInURL(slug: string): void {
+  if (typeof window === 'undefined') return;
+  const url = new URL(window.location.href);
+  url.searchParams.set('e', slug);
+  window.history.pushState({}, '', url.toString());
+}
+
+export function removeEntrySlugFromURL(): void {
+  if (typeof window === 'undefined') return;
+  const url = new URL(window.location.href);
+  url.searchParams.delete('e');
+  window.history.pushState({}, '', url.toString());
+}
+
+/**
+ * Fetch pre-rendered entry HTML from static route
+ */
+export async function fetchEntryHTML(slug: string): Promise<string> {
+  const response = await fetch(`/entry/${slug}/`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch entry: ${response.status} ${response.statusText}`);
+  }
+  
+  const html = await response.text();
+  return html;
+}
+
+/**
+ * Extract main content from static entry HTML
+ */
+export function extractEntryContent(html: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  
+  // Find the main content area (article with prose class)
+  const articleContent = doc.querySelector('article.prose');
+  if (articleContent) {
+    return articleContent.innerHTML;
+  }
+  
+  // Fallback: find main tag content
+  const mainContent = doc.querySelector('main');
+  if (mainContent) {
+    return mainContent.innerHTML;
+  }
+  
+  // Last resort: return the body content
+  return doc.body.innerHTML;
+}
+
+/**
+ * Focus trap utilities for modal accessibility
+ */
+export function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  const focusableSelectors = [
+    'button',
+    '[href]',
+    'input',
+    'select',
+    'textarea',
+    '[tabindex]:not([tabindex="-1"])',
+    '[contenteditable]'
+  ].join(', ');
+  
+  const elements = Array.from(container.querySelectorAll(focusableSelectors)) as HTMLElement[];
+  return elements.filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+}
+
+export function trapFocus(event: KeyboardEvent, container: HTMLElement): void {
+  if (event.key !== 'Tab') return;
+  
+  const focusableElements = getFocusableElements(container);
+  if (focusableElements.length === 0) return;
+  
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+  
+  if (event.shiftKey) {
+    // Shift + Tab: moving backwards
+    if (document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    }
+  } else {
+    // Tab: moving forwards
+    if (document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+}
+
+/**
+ * Scroll lock utilities to prevent background scrolling
+ */
+export function lockScroll(): void {
+  if (typeof document === 'undefined') return;
+  
+  // Store the current scroll position
+  const scrollY = window.scrollY;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.width = '100%';
+  document.body.dataset.scrollY = scrollY.toString();
+}
+
+export function unlockScroll(): void {
+  if (typeof document === 'undefined') return;
+  
+  const scrollY = document.body.dataset.scrollY;
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  
+  if (scrollY) {
+    window.scrollTo(0, parseInt(scrollY));
+    delete document.body.dataset.scrollY;
+  }
+}

@@ -62,3 +62,30 @@ export interface TimelineState extends TimelineNavigation {
   isKeyboardNavigating: boolean;
   lastInteractionType: 'mouse' | 'keyboard';
 }
+
+// Modal component types
+export interface EntryModalProps {
+  isOpen: boolean;
+  entry: TimelineEntry | null;
+  onClose: () => void;
+  className?: string;
+}
+
+export interface ModalState {
+  isLoading: boolean;
+  content: string | null;
+  error: string | null;
+  lastFetchedSlug: string | null;
+}
+
+// URL synchronization
+export interface URLParams {
+  entrySlug?: string;
+}
+
+// Focus trap utilities
+export interface FocusTrapElements {
+  firstFocusable: HTMLElement | null;
+  lastFocusable: HTMLElement | null;
+  focusableElements: HTMLElement[];
+}

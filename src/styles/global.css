@@ -245,3 +245,97 @@ kbd {
 .timeline-node-glow {
   animation: timeline-glow 2s ease-in-out infinite;
 }
+
+/* Modal animations */
+@keyframes modal-overlay-show {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-content-show {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95) translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+}
+
+@keyframes modal-overlay-hide {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes modal-content-hide {
+  from { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+  to { 
+    opacity: 0; 
+    transform: scale(0.95) translateY(-10px); 
+  }
+}
+
+/* Modal animation classes */
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: modal-overlay-show;
+}
+
+.zoom-in-95 {
+  animation-name: modal-content-show;
+}
+
+.fade-out {
+  animation-name: modal-overlay-hide;
+}
+
+.zoom-out-95 {
+  animation-name: modal-content-hide;
+}
+
+/* Modal specific styles */
+.modal-overlay {
+  backdrop-filter: blur(8px);
+}
+
+/* Prevent layout shift during modal operations */
+.modal-open {
+  overflow: hidden;
+}
+
+/* Enhanced prose styles for modal content */
+.prose.prose-invert {
+  --tw-prose-body: #d1d5db;
+  --tw-prose-headings: #ffffff;
+  --tw-prose-lead: #9ca3af;
+  --tw-prose-links: var(--tui-cyan);
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #6b7280;
+  --tw-prose-bullets: var(--tui-green);
+  --tw-prose-hr: #374151;
+  --tw-prose-quotes: #ffffff;
+  --tw-prose-quote-borders: var(--tui-amber);
+  --tw-prose-captions: #9ca3af;
+  --tw-prose-code: var(--tui-green);
+  --tw-prose-pre-code: #d1d5db;
+  --tw-prose-pre-bg: var(--tui-panel);
+  --tw-prose-th-borders: #374151;
+  --tw-prose-td-borders: #4b5563;
+}
+
+/* Focus management for modals */
+.modal-content:focus {
+  outline: none;
+}
+
+/* Smooth scroll behavior in modal content */
+.modal-content {
+  scroll-behavior: smooth;
+}
