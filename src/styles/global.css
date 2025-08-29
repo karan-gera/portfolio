@@ -190,3 +190,58 @@ a:hover {
 .terminal-glow {
   box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
 }
+
+/* Line clamp utilities for text truncation */
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Keyboard navigation styles */
+kbd {
+  display: inline-block;
+  padding: 0.125rem 0.25rem;
+  background-color: var(--tui-panel);
+  border: 1px solid #374151;
+  border-radius: 0.25rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* React component specific styles */
+.timeline-rail-node {
+  transition: all 0.2s ease;
+}
+
+.timeline-card {
+  transition: all 0.2s ease;
+  transform: translateZ(0); /* Enable hardware acceleration */
+}
+
+.timeline-card:hover {
+  transform: translateY(-2px) translateZ(0);
+}
+
+.timeline-card:focus-within {
+  transform: translateY(-1px) scale(1.02) translateZ(0);
+}
+
+/* Custom animations for timeline components */
+@keyframes timeline-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.timeline-node-glow {
+  animation: timeline-glow 2s ease-in-out infinite;
+}

@@ -62,67 +62,42 @@ console.log(`📄 Index page loaded ${entriesData.length} entries`);
       </div>
     </section>
 
-    <!-- Timeline Section Placeholder -->
+    <!-- Interactive Timeline Section -->
     <section class="mb-20">
       <div class="mb-12 text-center">
         <h2 class="mb-4 font-mono text-3xl">
           <span class="text-tui-cyan">></span> Professional Timeline
         </h2>
         <p class="text-gray-400">
-          Interactive timeline coming next. Data loaded and ready for React component.
+          Navigate through my career journey. Use keyboard arrows or click to explore.
         </p>
       </div>
 
-      <!-- Temporary Preview -->
-      <div class="terminal-border rounded-lg p-8 mb-8">
-        <div class="font-mono text-sm text-gray-400 mb-4">
-          <span class="text-tui-green">$</span> cat timeline_preview.json
-        </div>
-        <div class="space-y-4">
-          {entriesData.slice(0, 3).map((entry, index) => (
-            <div key={entry.slug} class="border-l-2 border-tui-amber pl-4">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="font-mono text-lg text-white">{entry.title}</h3>
-                <div class="flex items-center space-x-2">
-                  <span class="inline-flex items-center px-2 py-1 rounded text-xs font-mono" 
-                        class:list={[
-                          entry.type === 'work' ? 'bg-tui-green/20 text-tui-green' : 'bg-tui-amber/20 text-tui-amber'
-                        ]}>
-                    {entry.type.toUpperCase()}
-                  </span>
-                  <a href={`/entry/${entry.slug}`} 
-                     class="text-tui-cyan hover:text-tui-green transition-colors text-sm font-mono">
-                    View Details →
-                  </a>
+      <!-- Timeline Component Mount Point -->
+      <div id="timeline-root" 
+           class="min-h-[400px] relative"
+           data-entries={JSON.stringify(entriesData)}>
+        <!-- Loading/Fallback state -->
+        <div class="terminal-border rounded-lg p-8 text-center" id="timeline-fallback">
+          <div class="animate-pulse">
+            <div class="font-mono text-sm text-gray-400 mb-4">
+              <span class="text-tui-green">$</span> loading interactive timeline...
+            </div>
+            <div class="space-y-4">
+              {entriesData.slice(0, 2).map((entry) => (
+                <div key={entry.slug} class="border-l-2 border-gray-600 pl-4 text-left">
+                  <div class="h-4 bg-gray-700 rounded mb-2 w-3/4"></div>
+                  <div class="h-3 bg-gray-800 rounded mb-1 w-1/2"></div>
+                  <div class="h-3 bg-gray-800 rounded w-full"></div>
                 </div>
-              </div>
-              {entry.role && entry.org && (
-                <p class="text-sm text-tui-cyan mb-1">{entry.role} at {entry.org}</p>
-              )}
-              <p class="text-sm text-gray-300 mb-2">{entry.summary}</p>
-              <div class="flex items-center space-x-4 text-xs font-mono text-gray-500">
-                <span>{entry.start} - {entry.end || 'Present'}</span>
-                <span>•</span>
-                <span>{entry.tags.length} technologies</span>
-                {entry.metrics.length > 0 && (
-                  <>
-                    <span>•</span>
-                    <span>{entry.metrics.length} key metrics</span>
-                  </>
-                )}
-              </div>
+              ))}
             </div>
-          ))}
-          {entriesData.length > 3 && (
-            <div class="border-l-2 border-gray-600 pl-4 text-gray-500 font-mono text-sm">
-              ... {entriesData.length - 3} more entries
-            </div>
-          )}
+          </div>
         </div>
       </div>
 
-      <!-- Data Summary -->
-      <div class="grid gap-6 md:grid-cols-3">
+      <!-- Stats Summary -->
+      <div class="grid gap-6 md:grid-cols-3 mt-12">
         <div class="terminal-border rounded-lg p-6">
           <h3 class="font-mono text-lg text-tui-green mb-2">Total Entries</h3>
           <div class="font-mono text-3xl text-white">{entriesData.length}</div>
@@ -172,10 +147,69 @@ console.log(`📄 Index page loaded ${entriesData.length} entries`);
     </section>
   </div>
 
-  <!-- Pass data to future React component -->
+  <!-- React Timeline Component Hydration -->
+  <script>
+    import { Timeline } from '../components/timeline/Timeline';
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    // Timeline App component
+    function TimelineApp({ entries }) {
+      const handleEntrySelect = (entry) => {
+        // Navigate to entry detail page
+        window.location.href = `/entry/${entry.slug}`;
+      };
+
+      return React.createElement(Timeline, {
+        entries,
+        onEntrySelect: handleEntrySelect,
+        className: 'w-full'
+      });
+    }
+
+    // Client-side hydration
+    document.addEventListener('DOMContentLoaded', () => {
+      const timelineRoot = document.getElementById('timeline-root');
+      const fallback = document.getElementById('timeline-fallback');
+      
+      if (timelineRoot) {
+        try {
+          // Parse entries data from the DOM
+          const entriesData = JSON.parse(timelineRoot.dataset.entries || '[]');
+          
+          // Create React root and render Timeline
+          const root = createRoot(timelineRoot);
+          root.render(React.createElement(TimelineApp, { entries: entriesData }));
+          
+          // Hide fallback loading state
+          if (fallback) {
+            fallback.style.display = 'none';
+          }
+          
+          console.log('✅ Timeline component mounted with', entriesData.length, 'entries');
+        } catch (error) {
+          console.error('❌ Failed to mount Timeline component:', error);
+          
+          // Show error state
+          if (fallback) {
+            fallback.innerHTML = `
+              <div class="terminal-border rounded-lg p-8 text-center bg-red-900/20 border-red-500/30">
+                <div class="font-mono text-sm text-red-400 mb-2">
+                  <span class="text-red-500">✗</span> Timeline component failed to load
+                </div>
+                <p class="text-xs text-red-300">Check console for details</p>
+              </div>
+            `;
+          }
+        }
+      }
+    });
+  </script>
+  
+  <!-- Global data for debugging -->
   <script define:vars={{ entriesData }}>
-    // Make entries data available globally for React timeline component
+    // Make entries data available globally for debugging
     window.portfolioEntries = entriesData;
-    console.log('📊 Entries data available for React:', window.portfolioEntries?.length);
+    console.log('📊 Portfolio data loaded:', entriesData?.length, 'entries');
   </script>
 </BaseLayout>
