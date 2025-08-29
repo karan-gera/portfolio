@@ -1,0 +1,203 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Import and sort entries by start date (descending - most recent first)
+const allEntries = await getCollection('entries', ({ data }) => {
+  // Filter out draft entries in production
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+// Sort by start date descending (most recent first)
+const sortedEntries = allEntries.sort((a, b) => {
+  // Convert YYYY-MM to comparable format
+  const dateA = new Date(a.data.start + '-01'); // Add day for valid date
+  const dateB = new Date(b.data.start + '-01');
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Helper function to format date for display
+function formatDate(dateString: string): string {
+  const [year, month] = dateString.split('-');
+  const date = new Date(parseInt(year), parseInt(month) - 1);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long' 
+  });
+}
+
+// Helper function to calculate duration
+function calculateDuration(start: string, end: string | null): string {
+  const startDate = new Date(start + '-01');
+  const endDate = end ? new Date(end + '-01') : new Date();
+  
+  const diffTime = endDate.getTime() - startDate.getTime();
+  const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30.44)); // Average month length
+  
+  if (diffMonths < 12) {
+    return `${diffMonths} month${diffMonths !== 1 ? 's' : ''}`;
+  } else {
+    const years = Math.floor(diffMonths / 12);
+    const remainingMonths = diffMonths % 12;
+    
+    if (remainingMonths === 0) {
+      return `${years} year${years !== 1 ? 's' : ''}`;
+    } else {
+      return `${years}y ${remainingMonths}m`;
+    }
+  }
+}
+
+// Helper data for statistics
+const entryStats = sortedEntries.reduce((acc, entry) => {
+  acc[entry.data.type] = (acc[entry.data.type] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+const statsEntries = Object.entries(entryStats);
+
+console.log('📊 Timeline Data Analysis:');
+console.log(`Total entries: ${sortedEntries.length}`);
+console.log('Entries by type:', entryStats);
+console.log('Date range:', {
+  earliest: sortedEntries[sortedEntries.length - 1]?.data.start,
+  latest: sortedEntries[0]?.data.start
+});
+---
+
+<BaseLayout title="Timeline Test - Portfolio" description="Testing content collections and sorting logic">
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <section class="mb-12">
+      <h1 class="mb-4 font-mono text-3xl">
+        <span class="text-tui-cyan">></span> Timeline Data Test
+      </h1>
+      <p class="text-gray-300">
+        Testing content collections import and sorting logic. Found <strong>{sortedEntries.length}</strong> entries.
+      </p>
+    </section>
+
+    <!-- Stats Overview -->
+    <section class="mb-12">
+      <div class="terminal-border rounded-lg p-6 mb-6">
+        <h2 class="font-mono text-xl text-tui-amber mb-4">Collection Statistics</h2>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <h3 class="font-mono text-sm text-tui-green mb-2">Entry Types</h3>
+            <div class="font-mono text-sm text-gray-300 space-y-1">
+              {statsEntries.map(([type, count]) => 
+                <div key={type}>
+                  <span class="text-tui-cyan">{type}:</span> {count}
+                </div>
+              )}
+            </div>
+          </div>
+          <div>
+            <h3 class="font-mono text-sm text-tui-green mb-2">Date Range</h3>
+            <div class="font-mono text-sm text-gray-300 space-y-1">
+              <div>
+                <span class="text-tui-cyan">Latest:</span> {formatDate(sortedEntries[0]?.data.start || '')}
+              </div>
+              <div>
+                <span class="text-tui-cyan">Earliest:</span> {formatDate(sortedEntries[sortedEntries.length - 1]?.data.start || '')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Entry List (JSON-style for testing) -->
+    <section class="mb-12">
+      <h2 class="font-mono text-xl text-tui-amber mb-6">Sorted Entries (Start Date Desc)</h2>
+      <div class="space-y-6">
+        {sortedEntries.map((entry, index) => (
+          <div class="terminal-border rounded-lg p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="font-mono text-lg text-white mb-1">{entry.data.title}</h3>
+                {entry.data.role && (
+                  <p class="text-sm text-tui-cyan">{entry.data.role}</p>
+                )}
+                {entry.data.org && (
+                  <p class="text-sm text-gray-400">{entry.data.org} {entry.data.location && `• ${entry.data.location}`}</p>
+                )}
+              </div>
+              <div class="text-right">
+                <div class="inline-flex items-center space-x-2 px-2 py-1 rounded text-xs font-mono"
+                     class:list={[
+                       entry.data.type === 'work' ? 'bg-tui-green/20 text-tui-green' : 'bg-tui-amber/20 text-tui-amber'
+                     ]}>
+                  <span>{entry.data.type.toUpperCase()}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <div class="font-mono text-sm text-gray-300 mb-2">
+                <span class="text-tui-cyan">Timeline:</span> 
+                {formatDate(entry.data.start)} - {entry.data.end ? formatDate(entry.data.end) : 'Present'}
+                <span class="text-gray-500 ml-2">({calculateDuration(entry.data.start, entry.data.end)})</span>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">{entry.data.summary}</p>
+            </div>
+
+            {entry.data.tags.length > 0 && (
+              <div class="mb-4">
+                <div class="font-mono text-xs text-tui-cyan mb-2">Technologies:</div>
+                <div class="flex flex-wrap gap-1">
+                  {entry.data.tags.map(tag => 
+                    <span key={tag} class="inline-flex items-center px-2 py-1 rounded text-xs font-mono bg-tui-panel text-gray-300 border border-gray-600">
+                      {tag}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {entry.data.metrics.length > 0 && (
+              <div class="mb-4">
+                <div class="font-mono text-xs text-tui-green mb-2">Key Metrics:</div>
+                <ul class="text-sm text-gray-300 space-y-1">
+                  {entry.data.metrics.map((metric, idx) => 
+                    <li key={idx} class="flex items-start space-x-2">
+                      <span class="text-tui-green mt-1">•</span>
+                      <span>{metric}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            <div class="flex items-center justify-between text-xs font-mono text-gray-500">
+              <div>Slug: {entry.slug}</div>
+              <div>Index: #{index + 1}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Raw JSON for debugging -->
+    <section>
+      <h2 class="font-mono text-xl text-tui-amber mb-6">Raw Data (Debug)</h2>
+      <div class="terminal-border rounded-lg p-6 bg-tui-bg">
+        <pre class="font-mono text-xs text-gray-400 overflow-x-auto"><code>{JSON.stringify(
+          sortedEntries.map(entry => ({
+            slug: entry.slug,
+            type: entry.data.type,
+            title: entry.data.title,
+            start: entry.data.start,
+            end: entry.data.end,
+            summary: entry.data.summary.substring(0, 100) + '...',
+            tagCount: entry.data.tags.length,
+            metricCount: entry.data.metrics.length,
+            linkCount: entry.data.links.length
+          })), 
+          null, 
+          2
+        )}</code></pre>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
