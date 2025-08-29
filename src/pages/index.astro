@@ -1,87 +1,181 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Load and sort entries by start date (descending - most recent first)
+const allEntries = await getCollection('entries', ({ data }) => {
+  // Filter out draft entries in production
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+// Sort by start date descending (most recent first)
+const sortedEntries = allEntries.sort((a, b) => {
+  // Convert YYYY-MM to comparable format
+  const dateA = new Date(a.data.start + '-01'); // Add day for valid date
+  const dateB = new Date(b.data.start + '-01');
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Prepare entries data for React component (when we add it)
+const entriesData = sortedEntries.map(entry => ({
+  slug: entry.slug,
+  type: entry.data.type,
+  title: entry.data.title,
+  role: entry.data.role,
+  org: entry.data.org,
+  location: entry.data.location,
+  start: entry.data.start,
+  end: entry.data.end,
+  summary: entry.data.summary,
+  tags: entry.data.tags,
+  links: entry.data.links,
+  metrics: entry.data.metrics,
+  images: entry.data.images,
+  featured: entry.data.featured
+}));
+
+console.log(`📄 Index page loaded ${entriesData.length} entries`);
 ---
 
-<BaseLayout title="Portfolio - Home" description="Welcome to my terminal-inspired portfolio">
-  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+<BaseLayout title="Portfolio" description="Full-stack developer portfolio showcasing projects and experience">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
     <!-- Hero Section -->
-    <section class="mb-16">
-      <div class="terminal-border rounded-lg p-8 terminal-glow">
-        <h1 class="mb-4 font-mono text-4xl font-medium">
-          <span class="text-tui-green">></span> Hello, World!
+    <section class="mb-20">
+      <div class="text-center">
+        <h1 class="mb-6 font-mono text-5xl font-medium">
+          <span class="text-tui-green">></span> Hello, I'm <span class="text-white">Developer</span>
         </h1>
-        <p class="mb-6 text-lg text-gray-300">
-          Welcome to my portfolio. This is a terminal-inspired interface built with Astro, React, and Tailwind CSS.
+        <p class="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
+          Full-stack engineer passionate about building exceptional digital experiences. 
+          Explore my journey through interactive projects and professional milestones.
         </p>
-        <div class="font-mono text-sm text-gray-400">
-          <div class="mb-2">
-            <span class="text-tui-cyan">$</span> 
-            <span class="text-gray-300">cat about.txt</span>
+        <div class="flex justify-center space-x-4">
+          <div class="flex items-center space-x-2 font-mono text-sm text-gray-400">
+            <span class="h-2 w-2 bg-tui-green rounded-full animate-pulse"></span>
+            <span>Available for opportunities</span>
           </div>
-          <div class="ml-4 border-l-2 border-tui-amber pl-4">
-            <p>Full-stack developer passionate about creating beautiful and functional web experiences.</p>
-            <p>Currently building with modern technologies and terminal aesthetics.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Status Section -->
-    <section class="mb-16">
-      <h2 class="mb-6 font-mono text-2xl">
-        <span class="text-tui-cyan">></span> System Status
-      </h2>
-      <div class="grid gap-4 md:grid-cols-3">
-        <div class="terminal-border rounded-lg p-6">
-          <div class="mb-2 flex items-center space-x-2">
-            <span class="h-2 w-2 bg-tui-green rounded-full"></span>
-            <span class="font-mono text-sm text-tui-green">ONLINE</span>
-          </div>
-          <h3 class="font-mono text-lg">Projects</h3>
-          <p class="text-sm text-gray-400">Multiple repositories active</p>
-        </div>
-        
-        <div class="terminal-border rounded-lg p-6">
-          <div class="mb-2 flex items-center space-x-2">
-            <span class="h-2 w-2 bg-tui-amber rounded-full"></span>
-            <span class="font-mono text-sm text-tui-amber">BUILDING</span>
-          </div>
-          <h3 class="font-mono text-lg">Skills</h3>
-          <p class="text-sm text-gray-400">Continuously learning</p>
-        </div>
-        
-        <div class="terminal-border rounded-lg p-6">
-          <div class="mb-2 flex items-center space-x-2">
+          <div class="flex items-center space-x-2 font-mono text-sm text-gray-400">
             <span class="h-2 w-2 bg-tui-cyan rounded-full"></span>
-            <span class="font-mono text-sm text-tui-cyan">AVAILABLE</span>
+            <span>{entriesData.length} entries loaded</span>
           </div>
-          <h3 class="font-mono text-lg">Contact</h3>
-          <p class="text-sm text-gray-400">Ready for new opportunities</p>
         </div>
       </div>
     </section>
 
-    <!-- Terminal Output Preview -->
+    <!-- Timeline Section Placeholder -->
+    <section class="mb-20">
+      <div class="mb-12 text-center">
+        <h2 class="mb-4 font-mono text-3xl">
+          <span class="text-tui-cyan">></span> Professional Timeline
+        </h2>
+        <p class="text-gray-400">
+          Interactive timeline coming next. Data loaded and ready for React component.
+        </p>
+      </div>
+
+      <!-- Temporary Preview -->
+      <div class="terminal-border rounded-lg p-8 mb-8">
+        <div class="font-mono text-sm text-gray-400 mb-4">
+          <span class="text-tui-green">$</span> cat timeline_preview.json
+        </div>
+        <div class="space-y-4">
+          {entriesData.slice(0, 3).map((entry, index) => (
+            <div key={entry.slug} class="border-l-2 border-tui-amber pl-4">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-mono text-lg text-white">{entry.title}</h3>
+                <div class="flex items-center space-x-2">
+                  <span class="inline-flex items-center px-2 py-1 rounded text-xs font-mono" 
+                        class:list={[
+                          entry.type === 'work' ? 'bg-tui-green/20 text-tui-green' : 'bg-tui-amber/20 text-tui-amber'
+                        ]}>
+                    {entry.type.toUpperCase()}
+                  </span>
+                  <a href={`/entry/${entry.slug}`} 
+                     class="text-tui-cyan hover:text-tui-green transition-colors text-sm font-mono">
+                    View Details →
+                  </a>
+                </div>
+              </div>
+              {entry.role && entry.org && (
+                <p class="text-sm text-tui-cyan mb-1">{entry.role} at {entry.org}</p>
+              )}
+              <p class="text-sm text-gray-300 mb-2">{entry.summary}</p>
+              <div class="flex items-center space-x-4 text-xs font-mono text-gray-500">
+                <span>{entry.start} - {entry.end || 'Present'}</span>
+                <span>•</span>
+                <span>{entry.tags.length} technologies</span>
+                {entry.metrics.length > 0 && (
+                  <>
+                    <span>•</span>
+                    <span>{entry.metrics.length} key metrics</span>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+          {entriesData.length > 3 && (
+            <div class="border-l-2 border-gray-600 pl-4 text-gray-500 font-mono text-sm">
+              ... {entriesData.length - 3} more entries
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Data Summary -->
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="terminal-border rounded-lg p-6">
+          <h3 class="font-mono text-lg text-tui-green mb-2">Total Entries</h3>
+          <div class="font-mono text-3xl text-white">{entriesData.length}</div>
+          <p class="text-sm text-gray-400">Projects and positions</p>
+        </div>
+        
+        <div class="terminal-border rounded-lg p-6">
+          <h3 class="font-mono text-lg text-tui-amber mb-2">Timeline Span</h3>
+          <div class="font-mono text-lg text-white">
+            {entriesData[entriesData.length - 1]?.start} - {entriesData[0]?.end || 'Present'}
+          </div>
+          <p class="text-sm text-gray-400">Career progression</p>
+        </div>
+        
+        <div class="terminal-border rounded-lg p-6">
+          <h3 class="font-mono text-lg text-tui-cyan mb-2">Technologies</h3>
+          <div class="font-mono text-3xl text-white">
+            {[...new Set(entriesData.flatMap(entry => entry.tags))].length}
+          </div>
+          <p class="text-sm text-gray-400">Unique skills</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
     <section>
-      <h2 class="mb-6 font-mono text-2xl">
-        <span class="text-tui-amber">></span> Recent Activity
-      </h2>
-      <div class="terminal-border rounded-lg bg-tui-bg p-6 font-mono text-sm">
-        <div class="mb-2 text-gray-500">Last login: {new Date().toLocaleDateString()} on portfolio</div>
-        <div class="mb-2">
-          <span class="text-tui-green">user@portfolio:~$</span> 
-          <span class="text-gray-300">ls -la projects/</span>
-        </div>
-        <div class="ml-4 text-gray-400">
-          <div>drwxr-xr-x  portfolio-site</div>
-          <div>drwxr-xr-x  web-applications</div>
-          <div>drwxr-xr-x  open-source</div>
-        </div>
-        <div class="mt-4">
-          <span class="text-tui-green">user@portfolio:~$</span> 
-          <span class="text-gray-300 animate-pulse">_</span>
+      <div class="terminal-border rounded-lg p-8 text-center">
+        <h3 class="font-mono text-xl text-tui-amber mb-4">Ready to Explore?</h3>
+        <p class="text-gray-300 mb-6">
+          Check out the timeline test page to see the data structure in action.
+        </p>
+        <div class="flex justify-center space-x-4">
+          <a href="/timeline-test" 
+             class="inline-flex items-center space-x-2 px-4 py-2 terminal-border rounded font-mono text-sm text-tui-cyan hover:bg-tui-panel transition-colors">
+            <span>View Data Test</span>
+            <span>→</span>
+          </a>
+          {entriesData.length > 0 && (
+            <a href={`/entry/${entriesData[0].slug}`}
+               class="inline-flex items-center space-x-2 px-4 py-2 bg-tui-green/20 border border-tui-green rounded font-mono text-sm text-tui-green hover:bg-tui-green/30 transition-colors">
+              <span>Latest Entry</span>
+              <span>→</span>
+            </a>
+          )}
         </div>
       </div>
     </section>
   </div>
+
+  <!-- Pass data to future React component -->
+  <script define:vars={{ entriesData }}>
+    // Make entries data available globally for React timeline component
+    window.portfolioEntries = entriesData;
+    console.log('📊 Entries data available for React:', window.portfolioEntries?.length);
+  </script>
 </BaseLayout>
