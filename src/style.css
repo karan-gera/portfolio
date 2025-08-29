@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply font-mono;
+  }
+  
+  body {
+    @apply bg-terminal-bg;
+  }
+}
+
+/* Terminal-style components */
+@layer components {
+  .terminal-section {
+    @apply bg-terminal-gray border border-terminal-gray p-6 mb-6;
+  }
+  
+  .skill-tag {
+    @apply bg-terminal-gray text-terminal-fg px-2 py-1 text-sm border border-terminal-accent/20 hover:border-terminal-accent transition-colors;
+  }
+  
+  .tech-tag {
+    @apply bg-terminal-accent/10 text-terminal-accent px-2 py-1 text-xs border border-terminal-accent;
+  }
+  
+  .link-button {
+    @apply text-terminal-accent hover:bg-terminal-accent hover:text-terminal-bg px-3 py-1 border border-terminal-accent transition-colors;
+  }
+  
+  .project-card {
+    @apply bg-terminal-gray border border-terminal-accent/20 p-4 hover:border-terminal-accent transition-colors;
+  }
+  
+  .prompt {
+    @apply text-terminal-green;
+  }
+  
+  .command {
+    @apply text-terminal-accent;
+  }
+}
