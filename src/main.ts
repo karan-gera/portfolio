@@ -22,6 +22,16 @@ interface Experience {
 
 const projects: Project[] = [
   {
+    title: "Community-Sentiment Options Trading Agent",
+    description: "An algorithmic trading system that analyzes Reddit community sentiment to guide options trading strategies. Uses covered calls and cash-secured puts for risk management while attempting to outperform market benchmarks.",
+    technologies: ["Python", "PyTorch", "Reddit API", "Alpaca Paper Trading API", "Machine Learning"],
+    motivation: "I was curious about whether community sentiment on platforms like Reddit could provide meaningful signals for investment decisions. Rather than just sentiment analysis, I wanted to build a system that could act on these insights using conservative options strategies that provide built-in safety nets.",
+    experience: "This project combines natural language processing for sentiment analysis with financial market data and options trading logic. The challenge was building a system that could parse community discussions, extract actionable sentiment signals, and translate those into specific trading decisions. I focused on covered calls and cash-secured puts as they provide income generation while limiting downside risk.",
+    results: "The current iteration has outperformed the S&P 500 by 13% over a one-month tracking period. The system successfully identifies sentiment trends from subreddit discussions and translates them into options positions with built-in risk management through the covered call and cash-secured put strategies.",
+    feedback: "Still in active development and testing. The early performance results are encouraging, though I'm focused on longer-term validation and ensuring the strategy remains robust across different market conditions.",
+    challenges: "Filtering signal from noise in community discussions is complex - not all sentiment is actionable or relevant to market movements. Building reliable sentiment analysis that can distinguish between genuine market insight and speculation or manipulation. The biggest challenge is ensuring the system remains conservative and doesn't expose excessive risk while still capturing upside potential. The active training set is based on r/ThetaGang, which, while focused on covered and cash-secured strategies, is not representative of the broader market."
+  },
+  {
     title: "MCP Git Orchestrator",
     description: "Local-first Model Context Protocol (MCP) server providing AI agents with safe, structured Git control. Built for Cursor IDE integration with comprehensive safety mechanisms and policy enforcement.",
     technologies: ["TypeScript", "Node.js", "MCP", "Git", "GitHub API"],
