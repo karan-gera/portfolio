@@ -22,74 +22,101 @@ interface Experience {
 
 const projects: Project[] = [
   {
+    title: "MCP Git Orchestrator",
+    description: "Local-first Model Context Protocol (MCP) server providing AI agents with safe, structured Git control. Built for Cursor IDE integration with comprehensive safety mechanisms and policy enforcement.",
+    technologies: ["TypeScript", "Node.js", "MCP", "Git", "GitHub API"],
+    link: "https://github.com/karan-gera/mcp-git-orchestrator",
+    motivation: "I wanted to explore how AI agents could safely interact with Git repositories. Most existing integrations seemed either too limited or potentially risky, so I set out to build something that balanced functionality with safety through structured policies and validation.",
+    experience: "This was my deepest dive into building developer tooling and API design for AI systems. The challenge was creating a system that's powerful enough for complex Git workflows but safe enough to never corrupt a repository. I built allowlist-based command execution, worktree isolation for dry-runs, and a comprehensive policy system. The MCP integration required understanding how AI agents interact with external tools and designing intuitive interfaces.",
+    results: "Built a working MCP server with safety features like dry-run capabilities and policy enforcement. The system includes GitHub integration for automated PR creation and has maintained repository safety throughout testing. The approach seems to work well for the intended use cases.",
+    feedback: "Initial beta-testing with a small group of developers has been positive, with testers appreciating the safety features and policy controls. Based on this feedback, I'm planning to work on implementing the system at scale and gathering broader user input.",
+    challenges: "Balancing safety with functionality was the core challenge - every Git operation needed safety nets without becoming restrictive. Building reliable Git output parsing across different Git versions and configurations was complex. The policy system needed to be flexible enough for different team workflows while maintaining simplicity. Worktree isolation for dry-runs required deep Git internals knowledge to implement correctly."
+  },
+  {
     title: "AI Email Prioritizer",
-    description: "Built an AI that actually understands your inbox. Beats human accuracy by 85% at deciding what needs your attention vs what can wait.",
+    description: "An AI-powered email prioritization system that helps filter important messages from routine ones. Shows promising accuracy improvements over basic rule-based filters.",
     technologies: ["Python", "FastAPI", "Cohere"],
     link: "https://github.com/karan-gera/",
-    motivation: "Email overload is a real problem. I was all but ready to abandon my inbox, leaving it a rotten wasteland of unread spam emails from stores I shopped at once. Most email filters are primitive rule-based systems that break when senders change their patterns. I wanted to build something that understands intent and urgency, not just keywords.",
+    motivation: "I was struggling with email overload and found existing filters too simplistic. Most are rule-based and break when senders change their patterns. I wanted to experiment with building something that could understand context and urgency rather than just matching keywords.",
     experience: "This was my first deep dive into modern AI APIs. The trickiest part wasn't the ML, it was defining what 'priority' actually means across different users. I built a training pipeline using my own email history, then expanded it with synthetic scenarios. The API design went through 3 major iterations before landing on a simple fetch-analyze-respond pattern.",
-    results: "The system processes 500+ emails daily with 85% accuracy improvement over basic filters. Response time averages 200ms per email. The agent was distributed to six users, who all reported a middling to positive impact on their inbox.",
-    feedback: "It's not life-changing, but it eases an all too common burden. From the six test users, the most common request was a notification protocol, mobile or desktop. I'm currently architecting a simple Twilio integration, experimenting with mobile notifications that somehow feel more personal than the classic email notification bombs.",
+    results: "The system can process several hundred emails daily and shows improvement over basic rule-based filters. Response time is typically under 200ms per email. I tested it with six users who reported generally positive results, though the impact varied.",
+    feedback: "While not revolutionary, it does help with a common problem. The test users most frequently requested notification features, so I've been exploring mobile notification integrations that feel less overwhelming than traditional email alerts.",
     challenges: "Privacy was the biggest challenge. Users have to trust you (and by extension, any upstream dependencies) with their entire digital communication history. I implemented local processing where possible and built transparent data handling policies. With the release of smaller parameter open-source models, I'm also considering making this project local-first, or at least a fork that is local-only. Also learned that 'urgent' means different things to different people - had to make the AI highly configurable."
   },
   {
-    title: "Album Artwork Search", 
-    description: "When Spotify's API fails you. Built a search engine that hits 4 different music APIs and caches everything smart. 4,000+ people use it daily because music discovery shouldn't suck.",
+    title: "Album Artwork Search Engine", 
+    description: "A search engine for high-resolution album artwork that aggregates results from multiple music platforms. Helps find better quality artwork than typical image search results.",
     technologies: ["React.js", "Cloudflare Workers", "APIs"],
     link: "https://github.com/karan-gera/",
-    motivation: "Music APIs are unreliable and incomplete. You search for an obscure album, Spotify has the music but no artwork, Discogs has artwork but wrong metadata, MusicBrainz has perfect metadata but broken images. As a music collector, I was tired of manually hunting across platforms. The user experience was broken - why should finding album art require visiting 4 different websites?",
-    experience: "This project taught me about resilient system design. APIs fail, rate limits hit, and data formats change. I built a cascade system where each API failure triggers the next source, with intelligent caching to avoid repeat requests. The Cloudflare Workers integration was crucial for global performance - cache hits went from 40% to 85%.",
-    results: "4,000+ daily active users with sub-second search times globally. 98% cache hit rate for popular albums, 75% success rate for obscure releases. Most satisfying metric: user session length dropped 80% because people find what they need immediately.",
-    feedback: "Music producers and collectors love it. Got featured in several music production forums. One user said: 'Finally, a tool that works the way my brain does - I describe what I want, it finds it.' Multiple requests to add artist photos and concert imagery.",
-    challenges: "Rate limiting across 4 APIs simultaneously was a nightmare. Had to implement smart queuing and user-based throttling. Also discovered that music metadata is wildly inconsistent - same album appears with different titles, spellings, and release dates across platforms. Built a fuzzy matching system to handle these inconsistencies."
+    motivation: "I was frustrated by how hard it is to find high-quality album artwork. Google Images usually returns low-resolution thumbnails, and manually checking multiple music platforms is time-consuming. I thought it would be useful to build something that could search across platforms automatically and find the best available quality.",
+    experience: "This project is essentially a glorified but highly optimized API wrapper. The challenge was aggregating artwork from multiple music marketplaces and streaming platforms, then intelligently selecting the highest resolution version. Built automatic client-side caching to avoid repeated API calls and implemented fallback chains for rate limiting and API failures. The real complexity was in resolution detection and quality comparison algorithms.",
+    results: "The tool has grown to several thousand daily users who use it for personal collections and design work. The caching system makes most searches fast, and it can find artwork for many releases that are hard to locate manually. Users have mentioned using it for vinyl printing and music library organization.",
+    feedback: "Music collectors and designers seem to find it useful for getting better quality artwork than they'd find elsewhere. Users have mentioned appreciating the time saved and the print-quality results. There have been requests for batch processing features and integration with music library software.",
+    challenges: "Each music platform serves artwork at different resolutions and formats. Had to reverse-engineer optimal resolution endpoints across services. Rate limiting required sophisticated queuing and user-based throttling. The biggest challenge was quality detection - algorithmically determining which version preserves the most detail and color accuracy without manual comparison."
   },
   {
-    title: "Graph-Driven Game Engine",
-    description: "Won 3rd place at NJIT's capstone showcase. Built a dialogue system where conversations branch naturally using graph databases instead of rigid if-else trees.",
-    technologies: ["Godot", "Neo4j", "TypeScript"],
+    title: "Full-Service Single-Player Game (Capstone Project)",
+    description: "A complete single-player game built from the ground up, featuring real-time gameplay, persistent world state, and a custom graph-driven dialogue engine. Placed 3rd at NJIT's capstone showcase.",
+    technologies: ["Godot", "Neo4j", "TypeScript", "Node.js", "WebSockets"],
     link: "https://github.com/karan-gera/",
-    motivation: "Traditional dialogue trees in games are linear and break immersion. Players notice when conversations feel scripted. I wanted to create dialogue that flows naturally, where NPCs remember past conversations, and player choices ripple through the entire game world. Think Westworld's host memories, but for game NPCs.",
-    experience: "This was the most technically ambitious project I'd undertaken. Integrating a graph database with a game engine isn't standard practice - had to build custom networking layers and real-time sync systems. The AI logic for conversation flow took months to get right. Each dialogue node needed to understand context, character relationships, and player history.",
-    results: "The demo convinced judges that game dialogue could be fundamentally different. NPCs felt alive - they referenced conversations from hours earlier, relationships evolved organically, and no two playthroughs were identical. Performance stayed smooth with 50+ active dialogue threads running simultaneously.",
-    feedback: "Judges called it 'the future of interactive storytelling.' Players said NPCs felt more human than in AAA games. Game development studios reached out asking about licensing the technology. The most rewarding feedback: players stopped thinking about dialogue as 'game mechanics' and started having genuine conversations.",
-    challenges: "Real-time graph queries while maintaining 60fps was brutal. Had to implement aggressive caching and prediction algorithms. The hardest part was making dynamic dialogue feel authored - too much randomness creates nonsense, too little feels scripted. Found the sweet spot through extensive playtesting."
+    motivation: "I wanted to create a full-featured single-player game that moved beyond the typical gameplay loop of repetitive mechanics and fatigue. My goal was to design a world that starts with simple platforming puzzles and gradually expands into intricate physics-based challenges, dialogue-driven gameplay, and a world that meaningfully responds to player actions and roleplaying. I also wanted to experiment with stealth and first-person combat, blending these elements into a cohesive experience.",
+    experience: "I led the backend and systems design, focusing on persistent player data, world state management, and a dynamic narrative system. I built a custom graph database-powered dialogue engine that enabled context-aware, branching conversations, allowing the world and its characters to react to player choices and history. To support writers and designers, I developed a node-based dialogue editor integrated with Neo4j, making it easy to iterate on narrative content and push live updates. My work also included building REST and WebSocket APIs for the Godot game client, integrating real-time world updates, and ensuring smooth UI/UX for both players and content creators.",
+    results: "The finished game featured a persistent, evolving world with a unique dialogue system where NPCs could reference player actions and world events. The gameplay loop evolved from platforming to physics puzzles, stealth, and first-person combat, keeping the experience fresh and engaging. The custom dialogue editor was adopted by the narrative team, dramatically speeding up content creation. The project was recognized at the capstone showcase for its technical depth, narrative ambition, and polish.",
+    feedback: "Players and judges praised the depth and variety of gameplay, especially the way the world and its characters responded to player choices. The narrative team found the dialogue tooling intuitive and powerful, and several faculty members highlighted the technical ambition of the backend and editor systems.",
+    challenges: "Designing a world that meaningfully responds to player actions required careful state management and a flexible dialogue system. Integrating a graph database with the game engine for live dialogue updates and context-sensitive branching was non-trivial. The custom dialogue editor needed to be both powerful and user-friendly, which meant close collaboration with writers and designers. Balancing the different gameplay elements—platforming, physics puzzles, dialogue, stealth, and combat—while maintaining a cohesive experience was a major technical and design challenge."
   },
   {
     title: "Virtual Town Platform",
-    description: "Added the social layer to an open-source virtual world. Proximity-based interactions and persistent user accounts – basically making online spaces feel human again.",
-    technologies: ["TypeScript", "React.js", "MySQL"],
+    description: "Contributed social features to an open-source virtual world platform, including Nintendo StreetPass-inspired proximity-based interactions and a full-scale persistent account management system. Deployed the entire stack on a single micro EC2 instance, demonstrating the minification and efficiency of the developed features.",
+    technologies: ["TypeScript", "React.js", "MySQL", "AWS EC2"],
     link: "https://github.com/karan-gera/",
-    motivation: "Online social spaces feel antisocial. Discord servers with thousands of members where nobody talks, Zoom calls where everyone's muted, virtual worlds that feel empty despite being crowded. I wanted to recreate the natural social dynamics of physical spaces - you chat with people nearby, form small groups, have serendipitous encounters.",
-    experience: "Working with an existing open-source codebase was humbling. Had to understand years of accumulated technical debt while adding major features. The proximity algorithm was surprisingly complex - how close is 'nearby' in a virtual space? Implemented spatial hashing for performance and added social context (friends appear 'closer' than strangers).",
-    results: "User retention improved 30% after launch. Average session time increased from 12 minutes to 18 minutes. Most telling: users started organizing informal events and forming lasting friendships. The platform felt alive instead of just populated.",
-    feedback: "Community loved the human-scale interactions. Common comment: 'Finally feels like a real place where I might bump into friends.' Several other virtual world projects adopted similar proximity features. Users requested private group spaces and better discovery mechanisms.",
-    challenges: "Scaling proximity calculations for hundreds of concurrent users was tough. Also learned that social features need careful moderation - proximity can enable harassment as easily as friendship. Built robust blocking and reporting systems. Privacy was another concern - users needed control over their discoverability."
+    motivation: "I noticed that many online social spaces can feel impersonal despite having many users. Inspired by Nintendo StreetPass, I wanted to experiment with proximity-based interactions to recreate the spontaneous, serendipitous connections that happen in physical spaces. I was also interested in building a robust account management system that could scale efficiently.",
+    experience: "Working with an existing open-source codebase was humbling. Had to understand years of accumulated technical debt while adding major features. The proximity algorithm, modeled after Nintendo StreetPass, required careful tuning—how close is 'nearby' in a virtual world? I implemented spatial hashing for performance and added social context (friends appear 'closer' than strangers). I also architected and deployed a full-featured account management system, handling authentication, persistent user data, and privacy controls, all running on a single micro EC2 instance to prove the minification and efficiency of the implementation.",
+    results: "After implementing the StreetPass-style proximity features and the new account system, user retention improved and average session times increased. Users began organizing informal events and forming connections, which suggested the proximity features were having the intended effect. The cloud deployment on a micro EC2 instance handled real-world traffic with minimal resource usage, validating the efficiency of the codebase.",
+    feedback: "The community responded well to the proximity-based interactions, with users mentioning that it felt more natural and reminiscent of Nintendo StreetPass encounters. Some other virtual world projects have adopted similar features. Users have requested additional features like private group spaces and improved discovery.",
+    challenges: "Scaling proximity calculations for hundreds of concurrent users was tough, especially when emulating StreetPass-like real-time detection. Social features needed careful moderation—proximity can enable harassment as easily as friendship. Built robust blocking and reporting systems. Privacy was another concern—users needed control over their discoverability. Ensuring the full account management system remained performant and secure on a single micro EC2 instance required aggressive minification and optimization."
+  },
+  {
+    title: "Pascal-like Language Compiler",
+    description: "A complete compiler implementation for a custom Pascal-inspired language, built in C++. Started as a class project covering parsing, tokenization, and interpretation, then extended with x86 assembly code generation.",
+    technologies: ["C++", "Assembly", "Compiler Design"],
+    motivation: "Initially built as part of coursework to understand compiler construction fundamentals. After gaining experience with Assembly programming, I revisited the project a year later to add x86 assembly code generation, wanting to see the complete pipeline from source code to executable machine code.",
+    experience: "Building a compiler from scratch was an exercise in understanding how programming languages work under the hood. The initial phases - lexical analysis, parsing, and interpretation - taught me about language design and syntax trees. Adding x86 assembly generation later was a completely different challenge, requiring understanding of register allocation, instruction selection, and the calling conventions.",
+    results: "Successfully implemented a working compiler that could handle basic Pascal-like syntax including unary and binary operations, multiple data types, and if-else control structures. The x86 assembly backend generated functional assembly code that could be assembled and executed.",
+    feedback: "The project served as a solid foundation for understanding both high-level language design and low-level code generation. The experience of bridging the gap between source code and assembly gave me a deeper appreciation for the complexity hidden in modern compilers.",
+    challenges: "Parsing and semantic analysis required careful attention to language grammar and error handling. The biggest challenge came with the x86 assembly generation - mapping high-level constructs to assembly instructions, managing the stack, and ensuring proper register usage. Debugging generated assembly code was particularly tricky since errors could stem from either the compiler logic or incorrect assembly generation."
   },
   {
     title: "Sleep vs Performance Analytics",
-    description: "Turned student sleep data into actionable insights. D3.js visualizations that actually tell a story about the relationship between rest and academic performance.",
+    description: "A data visualization project exploring the relationship between sleep patterns and academic performance. Built interactive dashboards to help students understand their sleep habits.",
     technologies: ["React.js", "D3.js"],
     link: "https://github.com/karan-gera/",
-    motivation: "Students know sleep affects performance, but the relationship is more complex than 'more sleep = better grades.' Timing, consistency, and sleep quality all matter. I wanted to help students understand their personal sleep patterns and make data-driven improvements to their academic performance.",
+    motivation: "I was interested in exploring the relationship between sleep and academic performance beyond just hours of sleep. Factors like timing and consistency seemed important, so I wanted to build visualizations that could help students understand their own patterns.",
     experience: "This project was about storytelling with data. Raw sleep metrics are meaningless; the insight comes from correlations and patterns over time. Spent weeks designing visualizations that reveal non-obvious relationships. Learning D3.js was intense - it's incredibly powerful but has a steep learning curve.",
-    results: "Students using the dashboard improved their sleep consistency by 40% within a month. More importantly, they reported feeling more in control of their academic performance. The visualizations revealed that sleep timing mattered more than duration for many students.",
-    feedback: "University health center wants to integrate it into their wellness programs. Students appreciated seeing their data tell a story rather than just showing numbers. Requests for integration with fitness trackers and calendar apps to show how sleep affects specific activities.",
+    results: "Students who used the dashboard showed improvements in sleep consistency and reported feeling more aware of their patterns. The visualizations helped reveal that timing was often more important than duration for academic performance.",
+    feedback: "The university health center expressed interest in using it for wellness programs. Students liked seeing their data presented as insights rather than raw numbers. There have been requests for integration with fitness trackers and calendar apps.",
     challenges: "Privacy was paramount - sleep data is incredibly personal. Implemented local-only processing where possible. The biggest technical challenge was making complex statistical correlations understandable to non-technical users. Spent more time on UX than backend code."
   }
 ];
 
 const experiences: Experience[] = [
   {
+    title: "Software Engineer",
+    company: "Kaydigit",
+    period: "Aug 2025 – Present",
+    description: "Deployed to client development teams through Kaydigit's engineering services model. Focus on integrating AI capabilities into existing products, clearing technical debt, and building APIs and integrations for new feature development. Help teams unblock development challenges while building scalable AI pipelines and workflows."
+  },
+  {
     title: "Software Development Intern",
     company: "Clearwater Analytics",
     period: "Jun 2024 – Aug 2024",
-    description: "Built the data migration tool that R&D now uses across the company. Turned a complex graph database migration into a one-click process. The storage optimization wasn't just a nice-to-have – it saved real money at scale."
+    description: "Developed a data migration tool for graph database transitions that simplified the process for the R&D team. Worked on storage optimization that helped reduce costs and improved system efficiency."
   },
   {
     title: "Software Engineer (Co-op)",
     company: "WJTB Radio, NJIT",
     period: "Mar 2023 – May 2025", 
-    description: "Took a legacy radio station from periodic outages to rock-solid reliability. Led a team of 5 developers while scaling our streaming to handle 1,000+ concurrent listeners. Turned manual deployments into automated CI/CD – because nobody should deploy on Friday afternoons."
+    description: "Helped improve system reliability for the radio station and worked on scaling our streaming infrastructure. Led a team of 5 developers and implemented CI/CD automation to reduce deployment issues. The streaming now handles 1,000+ concurrent listeners more consistently."
   }
 ];
 
@@ -141,9 +168,16 @@ function openModal(project: Project) {
           
           ${project.link ? `
             <div class="pt-4 border-t border-terminal-accent/20">
-              <a href="${project.link}" target="_blank" class="link-button">
-                [view_source]
-              </a>
+              <div class="flex gap-4">
+                <a href="${project.link}" target="_blank" class="link-button">
+                  [view_source]
+                </a>
+                ${project.title === "Album Artwork Search Engine" ? `
+                  <a href="https://bigpictures.xyz" target="_blank" class="link-button">
+                    [try_it_out!]
+                  </a>
+                ` : ''}
+              </div>
             </div>
           ` : ''}
         </div>
@@ -208,11 +242,10 @@ function renderPortfolio() {
             <span class="prompt">$</span> <span class="command">cat about.txt</span>
           </div>
           <div class="text-sm leading-relaxed text-terminal-fg/90">
-            I build software that gets out of your way. Experienced with bringing legacy systems to modern standards, and making things scalable.
+            I enjoy building software that solves real problems. I have experience modernizing legacy systems and working on scalability challenges.
             <br><br>
-            Whether it's cutting database query time to zero or making complex workflows feel effortless, I obsess over eliminating friction. 
-            Every click, every wait, every moment of confusion is a bug to fix. Great software should feel like magic – simple on the surface, 
-            intelligent underneath.
+            I'm drawn to projects that eliminate friction and make complex things feel simple. I believe the best software gets out of your way 
+            and lets you focus on what matters. I'm always looking for ways to make interactions smoother and more intuitive.
           </div>
         </section>
 
