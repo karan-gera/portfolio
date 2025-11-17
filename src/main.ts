@@ -22,9 +22,31 @@ interface Experience {
 
 const projects: Project[] = [
   {
+    title: "Color Palette Generator",
+    description: "A modern, interactive color palette generator built with React and TypeScript. Create, edit, and save beautiful color palettes using advanced color theory relationships with a clean, monospace design aesthetic.",
+    technologies: ["React.js", "TypeScript", "Vite", "CSS Modules", "Color Theory", "LocalStorage", "State Management"],
+    link: "https://github.com/karan-gera/color-palette",
+    motivation: "I wanted a color palette tool that went beyond simple random generation. Most palette generators either lack control or don't understand color theory relationships. As an artist and graphic designer myself, I've seen how many design tools put essential features behind paywalls or premium tiers, creating barriers for independent artists and designers who are just starting out or working on personal projects. I set out to build something that combines the spontaneity of random generation with the structure of color harmony rules - completely free, no accounts, no subscriptions. Just a tool that works and democratizes access to proper color theory tools.",
+    experience: "This project was an exercise in building intuitive UI for creative tools. The challenge was implementing proper color theory algorithms - converting between color spaces, calculating complementary and analogous relationships, and ensuring the math translated to visually pleasing palettes. I built a custom undo/redo system using React hooks to track palette history, and implemented a locking mechanism so users could preserve colors they liked while regenerating others. The monospace aesthetic and smooth transitions were deliberate choices to make the tool feel polished. Keeping it completely free and accessible was a core design principle - no authentication barriers, no usage limits, no premium features.",
+    results: "The generator supports seven different color harmony relationships (complementary, analogous, triadic, tetradic, split-complementary, monochromatic, and random) with individual color controls for editing, rerolling, and locking. The undo/redo system tracks full palette history, and local storage persistence lets users save and reload palettes. The dark/light theme toggle and responsive design work seamlessly across devices. The completely free, no-barrier access model makes professional color theory tools available to anyone.",
+    feedback: "Personal use has been great for quick palette generation in design work. The color locking feature turned out to be essential - being able to lock a few colors and regenerate the rest is exactly the workflow I needed. The monospace typography gives it a distinct, developer-focused aesthetic that I've gotten positive feedback on. The free, unrestricted access has been specifically appreciated - several designers have mentioned using it as their go-to tool instead of paid alternatives.",
+    challenges: "Color theory math is deceptively complex - HSL to hex conversions, hue rotation, and maintaining proper saturation/lightness relationships required careful implementation. Building the undo/redo system to work smoothly with React's state management took several iterations. The biggest UX challenge was making individual color controls (edit, reroll, delete, lock) feel intuitive without cluttering the interface. Ensuring smooth animations and theme transitions across all components required careful CSS architecture. Balancing feature richness with the commitment to keeping everything free and client-side meant being thoughtful about what functionality to include."
+  },
+  {
+    title: "Better GitHub",
+    description: "A Chrome extension that declutters GitHub's landing page by removing distracting elements like feeds, promotional content, and sidebars. Provides a cleaner, more focused GitHub experience with instant toggle controls.",
+    technologies: ["TypeScript", "Vite", "Chrome Extension APIs", "CSS Injection", "Web Extensions"],
+    motivation: "GitHub's landing page became increasingly cluttered with feeds, promotional banners, and sidebars that distracted from actual work. I wanted a way to strip away the noise and get straight to my repositories and notifications without the visual clutter.",
+    experience: "Building a browser extension was a new challenge - understanding the Chrome Extension manifest system, content script injection, and managing state across different contexts. The key was making CSS injections work reliably across GitHub's dynamic page loads while keeping the toggle responsive. I built it with Vite for fast development iteration and TypeScript for type safety. The architecture needed to be extensible so adding new customizations would be straightforward. Kept the codebase Firefox-friendly from the start by using standard WebExtensions APIs, making an eventual cross-platform release straightforward.",
+    results: "The extension successfully removes all the targeted clutter elements - feeds, changelog sections, Copilot prompts, and sidebars - while maintaining GitHub's core functionality. The toggle works instantly without page reloads, and the custom CSS injections persist across navigation. It's become my daily driver for GitHub. The Firefox-compatible architecture means porting will require minimal changes.",
+    feedback: "Personal use has been great - the cleaner interface makes GitHub feel more like a tool and less like a social feed. The instant toggle is particularly useful when I need to quickly check the feed for team activity then switch back to focused mode. Planning to release on both Chrome Web Store and Firefox Add-ons once I add proper extension icons.",
+    challenges: "GitHub's DOM structure changes frequently, so CSS selectors needed to be robust yet specific enough to avoid breaking other elements. Managing the extension's state across page navigations required careful use of Chrome's storage APIs. The biggest challenge was ensuring the CSS injections applied quickly enough to avoid visible flashing of unwanted content during page loads. Maintaining cross-browser compatibility required careful API selection to avoid Chrome-specific features that wouldn't work in Firefox."
+  },
+  {
     title: "Community-Sentiment Options Trading Agent",
     description: "An algorithmic trading system that analyzes Reddit community sentiment to guide options trading strategies. Uses covered calls and cash-secured puts for risk management while attempting to outperform market benchmarks.",
-    technologies: ["Python", "PyTorch", "Reddit API", "Alpaca Paper Trading API", "Machine Learning"],
+    technologies: ["Python", "PyTorch", "Reddit API", "Alpaca Paper Trading API", "NLP", "Sentiment Analysis", "Financial Modeling", "REST APIs"],
+    link: "https://github.com/karan-gera/options-agent",
     motivation: "I was curious about whether community sentiment on platforms like Reddit could provide meaningful signals for investment decisions. Rather than just sentiment analysis, I wanted to build a system that could act on these insights using conservative options strategies that provide built-in safety nets.",
     experience: "This project combines natural language processing for sentiment analysis with financial market data and options trading logic. The challenge was building a system that could parse community discussions, extract actionable sentiment signals, and translate those into specific trading decisions. I focused on covered calls and cash-secured puts as they provide income generation while limiting downside risk.",
     results: "The current iteration has outperformed the S&P 500 by 13% over a one-month tracking period. The system successfully identifies sentiment trends from subreddit discussions and translates them into options positions with built-in risk management through the covered call and cash-secured put strategies.",
@@ -34,7 +56,7 @@ const projects: Project[] = [
   {
     title: "MCP Git Orchestrator",
     description: "Local-first Model Context Protocol (MCP) server providing AI agents with safe, structured Git control. Built for Cursor IDE integration with comprehensive safety mechanisms and policy enforcement.",
-    technologies: ["TypeScript", "Node.js", "MCP", "Git", "GitHub API"],
+    technologies: ["TypeScript", "Node.js", "MCP", "Git", "GitHub API", "JSON-RPC", "CLI Tools", "Process Management", "File System APIs"],
     link: "https://github.com/karan-gera/mcp-git-orchestrator",
     motivation: "I wanted to explore how AI agents could safely interact with Git repositories. Most existing integrations seemed either too limited or potentially risky, so I set out to build something that balanced functionality with safety through structured policies and validation.",
     experience: "This was my deepest dive into building developer tooling and API design for AI systems. The challenge was creating a system that's powerful enough for complex Git workflows but safe enough to never corrupt a repository. I built allowlist-based command execution, worktree isolation for dry-runs, and a comprehensive policy system. The MCP integration required understanding how AI agents interact with external tools and designing intuitive interfaces.",
@@ -45,8 +67,7 @@ const projects: Project[] = [
   {
     title: "AI Email Prioritizer",
     description: "An AI-powered email prioritization system that helps filter important messages from routine ones. Shows promising accuracy improvements over basic rule-based filters.",
-    technologies: ["Python", "FastAPI", "Cohere"],
-    link: "https://github.com/karan-gera/",
+    technologies: ["Python", "FastAPI", "Cohere", "NLP", "Email Protocols (IMAP/POP3)"],
     motivation: "I was struggling with email overload and found existing filters too simplistic. Most are rule-based and break when senders change their patterns. I wanted to experiment with building something that could understand context and urgency rather than just matching keywords.",
     experience: "This was my first deep dive into modern AI APIs. The trickiest part wasn't the ML, it was defining what 'priority' actually means across different users. I built a training pipeline using my own email history, then expanded it with synthetic scenarios. The API design went through 3 major iterations before landing on a simple fetch-analyze-respond pattern.",
     results: "The system can process several hundred emails daily and shows improvement over basic rule-based filters. Response time is typically under 200ms per email. I tested it with six users who reported generally positive results, though the impact varied.",
@@ -56,7 +77,7 @@ const projects: Project[] = [
   {
     title: "Album Artwork Search Engine", 
     description: "A search engine for high-resolution album artwork that aggregates results from multiple music platforms. Helps find better quality artwork than typical image search results.",
-    technologies: ["React.js", "Cloudflare Workers", "APIs"],
+    technologies: ["React.js", "Cloudflare Workers", "REST APIs", "LocalStorage"],
     link: "https://github.com/karan-gera/",
     motivation: "I was frustrated by how hard it is to find high-quality album artwork. Google Images usually returns low-resolution thumbnails, and manually checking multiple music platforms is time-consuming. I thought it would be useful to build something that could search across platforms automatically and find the best available quality.",
     experience: "This project is essentially a glorified but highly optimized API wrapper. The challenge was aggregating artwork from multiple music marketplaces and streaming platforms, then intelligently selecting the highest resolution version. Built automatic client-side caching to avoid repeated API calls and implemented fallback chains for rate limiting and API failures. The real complexity was in resolution detection and quality comparison algorithms.",
@@ -67,8 +88,7 @@ const projects: Project[] = [
   {
     title: "Full-Service Single-Player Game (Capstone Project)",
     description: "A complete single-player game built from the ground up, featuring real-time gameplay, persistent world state, and a custom graph-driven dialogue engine. Placed 3rd at NJIT's capstone showcase.",
-    technologies: ["Godot", "Neo4j", "TypeScript", "Node.js", "WebSockets"],
-    link: "https://github.com/karan-gera/",
+    technologies: ["Godot", "Neo4j", "TypeScript", "Node.js", "Game Physics", "Real-time Systems", "Database Design", "Custom Editors"],
     motivation: "I wanted to create a full-featured single-player game that moved beyond the typical gameplay loop of repetitive mechanics and fatigue. My goal was to design a world that starts with simple platforming puzzles and gradually expands into intricate physics-based challenges, dialogue-driven gameplay, and a world that meaningfully responds to player actions and roleplaying. I also wanted to experiment with stealth and first-person combat, blending these elements into a cohesive experience.",
     experience: "I led the backend and systems design, focusing on persistent player data, world state management, and a dynamic narrative system. I built a custom graph database-powered dialogue engine that enabled context-aware, branching conversations, allowing the world and its characters to react to player choices and history. To support writers and designers, I developed a node-based dialogue editor integrated with Neo4j, making it easy to iterate on narrative content and push live updates. My work also included building REST and WebSocket APIs for the Godot game client, integrating real-time world updates, and ensuring smooth UI/UX for both players and content creators.",
     results: "The finished game featured a persistent, evolving world with a unique dialogue system where NPCs could reference player actions and world events. The gameplay loop evolved from platforming to physics puzzles, stealth, and first-person combat, keeping the experience fresh and engaging. The custom dialogue editor was adopted by the narrative team, dramatically speeding up content creation. The project was recognized at the capstone showcase for its technical depth, narrative ambition, and polish.",
@@ -79,7 +99,6 @@ const projects: Project[] = [
     title: "Virtual Town Platform",
     description: "Contributed social features to an open-source virtual world platform, including Nintendo StreetPass-inspired proximity-based interactions and a full-scale persistent account management system. Deployed the entire stack on a single micro EC2 instance, demonstrating the minification and efficiency of the developed features.",
     technologies: ["TypeScript", "React.js", "MySQL", "AWS EC2"],
-    link: "https://github.com/karan-gera/",
     motivation: "I noticed that many online social spaces can feel impersonal despite having many users. Inspired by Nintendo StreetPass, I wanted to experiment with proximity-based interactions to recreate the spontaneous, serendipitous connections that happen in physical spaces. I was also interested in building a robust account management system that could scale efficiently.",
     experience: "Working with an existing open-source codebase was humbling. Had to understand years of accumulated technical debt while adding major features. The proximity algorithm, modeled after Nintendo StreetPass, required careful tuning—how close is 'nearby' in a virtual world? I implemented spatial hashing for performance and added social context (friends appear 'closer' than strangers). I also architected and deployed a full-featured account management system, handling authentication, persistent user data, and privacy controls, all running on a single micro EC2 instance to prove the minification and efficiency of the implementation.",
     results: "After implementing the StreetPass-style proximity features and the new account system, user retention improved and average session times increased. Users began organizing informal events and forming connections, which suggested the proximity features were having the intended effect. The cloud deployment on a micro EC2 instance handled real-world traffic with minimal resource usage, validating the efficiency of the codebase.",
@@ -89,7 +108,7 @@ const projects: Project[] = [
   {
     title: "Pascal-like Language Compiler",
     description: "A complete compiler implementation for a custom Pascal-inspired language, built in C++. Started as a class project covering parsing, tokenization, and interpretation, then extended with x86 assembly code generation.",
-    technologies: ["C++", "Assembly", "Compiler Design"],
+    technologies: ["C++", "x86 Assembly", "Lexical Analysis", "Parsing", "Code Generation", "x86 Architecture", "Compiler Design"],
     motivation: "Initially built as part of coursework to understand compiler construction fundamentals. After gaining experience with Assembly programming, I revisited the project a year later to add x86 assembly code generation, wanting to see the complete pipeline from source code to executable machine code.",
     experience: "Building a compiler from scratch was an exercise in understanding how programming languages work under the hood. The initial phases - lexical analysis, parsing, and interpretation - taught me about language design and syntax trees. Adding x86 assembly generation later was a completely different challenge, requiring understanding of register allocation, instruction selection, and the calling conventions.",
     results: "Successfully implemented a working compiler that could handle basic Pascal-like syntax including unary and binary operations, multiple data types, and if-else control structures. The x86 assembly backend generated functional assembly code that could be assembled and executed.",
@@ -99,8 +118,7 @@ const projects: Project[] = [
   {
     title: "Sleep vs Performance Analytics",
     description: "A data visualization project exploring the relationship between sleep patterns and academic performance. Built interactive dashboards to help students understand their sleep habits.",
-    technologies: ["React.js", "D3.js"],
-    link: "https://github.com/karan-gera/",
+    technologies: ["React.js", "D3.js", "Statistical Analysis", "Data Visualization", "UX Design", "Privacy Engineering"],
     motivation: "I was interested in exploring the relationship between sleep and academic performance beyond just hours of sleep. Factors like timing and consistency seemed important, so I wanted to build visualizations that could help students understand their own patterns.",
     experience: "This project was about storytelling with data. Raw sleep metrics are meaningless; the insight comes from correlations and patterns over time. Spent weeks designing visualizations that reveal non-obvious relationships. Learning D3.js was intense - it's incredibly powerful but has a steep learning curve.",
     results: "Students who used the dashboard showed improvements in sleep consistency and reported feeling more aware of their patterns. The visualizations helped reveal that timing was often more important than duration for academic performance.",
@@ -111,10 +129,10 @@ const projects: Project[] = [
 
 const experiences: Experience[] = [
   {
-    title: "Software Engineer",
-    company: "Kaydigit",
-    period: "Aug 2025 – Present",
-    description: "Deployed to client development teams through Kaydigit's engineering services model. Focus on integrating AI capabilities into existing products, clearing technical debt, and building APIs and integrations for new feature development. Help teams unblock development challenges while building scalable AI pipelines and workflows."
+    title: "AI/ML Engineer (Contract)",
+    company: "EdTech Platform (Anonymized)",
+    period: "Sep 2025 – Present",
+    description: "Built an AI system using Azure OpenAI that generates educational content across multiple map types with 98.5% schema compliance. Developed ETL pipelines and automated testing that reduced API costs by 29% and improved the worst-performing content type from 49% to 99% success rate."
   },
   {
     title: "Software Development Intern",
@@ -252,32 +270,16 @@ function renderPortfolio() {
             <span class="prompt">$</span> <span class="command">cat about.txt</span>
           </div>
           <div class="text-sm leading-relaxed text-terminal-fg/90">
-            I enjoy building software that solves real problems. I have experience modernizing legacy systems and working on scalability challenges.
+            In my own time, I like to build software that brings access to people who can't afford paywalls and want cleaner, faster, more functional experiences. 
+            As a working professional, I focus on integrating AI capabilities into existing products, building scalable pipelines, and helping teams unblock development 
+            challenges through technical debt reduction and API development.
             <br><br>
             I'm drawn to projects that eliminate friction and make complex things feel simple. I believe the best software gets out of your way 
-            and lets you focus on what matters. I'm always looking for ways to make interactions smoother and more intuitive.
-          </div>
-        </section>
-
-        <section class="terminal-section">
-          <div class="text-sm mb-3">
-            <span class="prompt">$</span> <span class="command">cat education.log</span>
-          </div>
-          <div class="space-y-4 text-sm">
-            <div class="border-l-2 border-terminal-accent pl-4">
-              <div class="text-terminal-accent font-semibold">B.S. in Computer Science</div>
-              <div class="text-terminal-fg/80">New Jersey Institute of Technology | Sep 2021 – May 2025</div>
-              <div class="text-terminal-fg/70 text-xs mt-1">Dean's List (2023, 2024, 2025), Academic Excellence Scholarship</div>
-              <div class="text-terminal-fg/60 text-xs mt-2">
-                Beyond standard CS curriculum, specialized in: Neural Networks & Large Language Models, 
-                Diffusion Models, Data Science, AI Ethics, and Linux Programming
-              </div>
-            </div>
-            <div class="border-l-2 border-terminal-accent pl-4">
-              <div class="text-terminal-accent font-semibold">DevOps Training Program</div>
-              <div class="text-terminal-fg/80">Intellipaat | Jun 2023 – Aug 2023</div>
-              <div class="text-terminal-fg/70 text-xs mt-1">3-month intensive: CI/CD, Docker, Kubernetes, Jenkins, cloud deployment</div>
-            </div>
+            and lets you focus on what matters. Whether it's democratizing access to design tools or streamlining developer workflows, 
+            I'm always looking for ways to make interactions smoother and more intuitive.
+            <br><br>
+            <strong>Currently seeking full-time software engineering opportunities</strong> where I can apply my experience in AI/ML, 
+            backend architecture, and full-stack development to solve challenging technical problems.
           </div>
         </section>
 
@@ -311,6 +313,24 @@ function renderPortfolio() {
                 <div class="text-terminal-green text-xs">[click_for_details]</div>
               </div>
             `).join('')}
+          </div>
+        </section>
+
+        <section class="terminal-section">
+          <div class="text-sm mb-3">
+            <span class="prompt">$</span> <span class="command">cat currently_learning.txt</span>
+          </div>
+          <div class="text-sm leading-relaxed text-terminal-fg/90 mb-6">
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag bg-terminal-accent/20">Rust Systems Programming</span>
+              <span class="skill-tag bg-terminal-accent/20">LLM Fine-tuning</span>
+              <span class="skill-tag bg-terminal-accent/20">GraphQL</span>
+              <span class="skill-tag bg-terminal-accent/20">Stream Processing (Kafka)</span>
+              <span class="skill-tag bg-terminal-accent/20">CDN & Edge Deployment</span>
+              <span class="skill-tag bg-terminal-accent/20">gRPC</span>
+              <span class="skill-tag bg-terminal-accent/20">Distributed Systems Design</span>
+              <span class="skill-tag bg-terminal-accent/20">WebAssembly (WASM)</span>
+            </div>
           </div>
         </section>
 
@@ -371,6 +391,28 @@ function renderPortfolio() {
                   <span class="skill-tag">Google Cloud</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="terminal-section">
+          <div class="text-sm mb-3">
+            <span class="prompt">$</span> <span class="command">cat education.log</span>
+          </div>
+          <div class="space-y-4 text-sm">
+            <div class="border-l-2 border-terminal-accent pl-4">
+              <div class="text-terminal-accent font-semibold">B.S. in Computer Science</div>
+              <div class="text-terminal-fg/80">New Jersey Institute of Technology | Sep 2021 – May 2025</div>
+              <div class="text-terminal-fg/70 text-xs mt-1">Dean's List (2023, 2024, 2025), Academic Excellence Scholarship</div>
+              <div class="text-terminal-fg/60 text-xs mt-2">
+                Beyond standard CS curriculum, specialized in: Neural Networks & Large Language Models, 
+                Diffusion Models, Data Science, AI Ethics, and Linux Programming
+              </div>
+            </div>
+            <div class="border-l-2 border-terminal-accent pl-4">
+              <div class="text-terminal-accent font-semibold">DevOps Training Program</div>
+              <div class="text-terminal-fg/80">Intellipaat | Jun 2023 – Aug 2023</div>
+              <div class="text-terminal-fg/70 text-xs mt-1">3-month intensive: CI/CD, Docker, Kubernetes, Jenkins, cloud deployment</div>
             </div>
           </div>
         </section>
